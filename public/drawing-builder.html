@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실제 롤 도안 생성 — 승지정밀산업롤</title>
+<meta name="description" content="롤의 치수와 제작 조건을 입력해 제작 검토용 2D 도안을 생성하고 저장하는 화면입니다.">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./release.css">
+<link rel="stylesheet" href="./drawing-builder.css">
+</head>
+<body class="drawing-builder-page">
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="header">
+ <a class="brand" href="./index.html" aria-label="승지정밀산업롤 처음으로"><span class="brand-mark" aria-hidden="true">SJ</span><span>승지정밀산업롤</span></a>
+ <nav aria-label="주 메뉴"><a href="./products.html">제품·가공</a><a href="./studio.html">3D 시안실</a><a href="./design.html">도안 설계</a><a href="./company.html">회사·제작 과정</a><a href="./location.html">찾아오시는 길</a></nav>
+ <a class="header-contact" href="./quote.html">견적문의 <span aria-hidden="true">↗</span></a>
+</header>
+<main id="main" class="builder-main">
+ <section class="builder-heading">
+  <div><p class="eyebrow">SJ / DRAWING BUILDER</p><h1>실제 롤 도안 생성</h1><p>제작에 필요한 기본 형상, 축·베어링 시트, 표면 조건과 검사 기준을 입력하면 2D 제작 검토 도면을 바로 만들 수 있습니다.</p></div>
+  <div class="builder-heading-actions"><a href="./design.html">기존 3D 도안 설계 ↗</a><a href="./design.html#import-cad-panel">CAD 업로드 ↗</a></div>
+ </section>
+ <section class="builder-layout">
+  <form id="drawing-form" class="drawing-form" novalidate>
+   <section class="form-card form-guide">
+    <div class="form-card-heading"><span class="step-badge">01</span><div><h2>도안 기본 정보</h2><p>견적과 제작 협의에 사용할 식별 정보를 먼저 입력합니다.</p></div></div>
+    <div class="field-grid two">
+     <label><span>도안명</span><input name="project" value="승지정밀산업롤 시제품" required></label>
+     <label><span>고객·프로젝트</span><input name="customer" placeholder="예: ○○ 인쇄라인"></label>
+     <label><span>도면 번호</span><input name="drawingNo" value="SJ-R-001" required></label>
+     <label><span>개정</span><input name="revision" value="A" maxlength="8" required></label>
+     <label><span>단위</span><select name="unit"><option value="mm">mm · 미터법</option><option value="inch">inch · 인치</option></select></label>
+     <label><span>롤 용도</span><select name="role"><option value="guide">가이드·이송 롤</option><option value="press">압착·프레스 롤</option><option value="printing">인쇄·나염 롤</option><option value="cooling">냉각·히팅 롤</option><option value="custom">기타 산업용 롤</option></select></label>
+    </div>
+   </section>
+   <section class="form-card">
+    <div class="form-card-heading"><span class="step-badge">02</span><div><h2>롤 외형과 축 치수</h2><p>도안의 기준 형상을 결정하는 값입니다. 모든 길이는 선택한 단위로 입력합니다.</p></div></div>
+    <div class="field-grid three">
+     <label><span>롤 종류</span><select name="type"><option value="solid">중실 롤</option><option value="hollow">중공 롤</option></select></label>
+     <label><span>몸통 면장 L<sub>f</sub></span><div class="unit-input"><input name="face" type="number" min="50" max="10000" step="1" value="800" required><b>mm</b></div></label>
+     <label><span>몸통 외경 ØD</span><div class="unit-input"><input name="bodyOd" type="number" min="20" max="2000" step="1" value="220" required><b>mm</b></div></label>
+     <label class="hollow-only"><span>몸통 내경 Ød</span><div class="unit-input"><input name="bodyId" type="number" min="10" max="1900" step="1" value="120"><b>mm</b></div></label>
+     <label><span>기본 축 지름 Ød<sub>s</sub></span><div class="unit-input"><input name="shaft" type="number" min="10" max="500" step="1" value="70" required><b>mm</b></div></label>
+     <label><span>좌측 축 길이 L<sub>L</sub></span><div class="unit-input"><input name="left" type="number" min="30" max="3000" step="1" value="300" required><b>mm</b></div></label>
+     <label><span>우측 축 길이 L<sub>R</sub></span><div class="unit-input"><input name="right" type="number" min="30" max="3000" step="1" value="300" required><b>mm</b></div></label>
+    </div>
+    <div class="field-note"><strong>전체 길이</strong><output id="overall-output">1,400 mm</output><span>= 좌측 축 + 몸통 면장 + 우측 축</span></div>
+   </section>
+   <section class="form-card">
+    <div class="form-card-heading"><span class="step-badge">03</span><div><h2>저널·베어링 시트</h2><p>베어링이 걸리는 위치와 길이를 별도로 표시합니다. 모르면 축 지름과 같은 값으로 시작한 뒤 상담 시 확정하세요.</p></div></div>
+    <div class="field-grid four">
+     <label><span>좌측 시트 Ø</span><div class="unit-input"><input name="leftSeatDia" type="number" min="10" max="500" step="1" value="70"><b>mm</b></div></label>
+     <label><span>좌측 시트 길이</span><div class="unit-input"><input name="leftSeatLength" type="number" min="10" max="3000" step="1" value="90"><b>mm</b></div></label>
+     <label><span>우측 시트 Ø</span><div class="unit-input"><input name="rightSeatDia" type="number" min="10" max="500" step="1" value="70"><b>mm</b></div></label>
+     <label><span>우측 시트 길이</span><div class="unit-input"><input name="rightSeatLength" type="number" min="10" max="3000" step="1" value="90"><b>mm</b></div></label>
+    </div>
+    <div class="field-note info"><span>도면은 시트 구간을 계단 형상으로 표시합니다. 베어링 번호, 끼워맞춤과 어깨 R은 설치 장치와 함께 최종 검토해야 합니다.</span></div>
+   </section>
+   <section class="form-card">
+    <div class="form-card-heading"><span class="step-badge">04</span><div><h2>표면 패턴과 가공 형상</h2><p>몸통 표면의 기본 패턴을 정하면 도면의 외형과 홈 정보를 함께 표시합니다.</p></div></div>
+    <div class="field-grid three">
+     <label><span>표면 패턴</span><select name="pattern"><option value="plain">평활·일반 가공</option><option value="spiral">사선 홈·나선</option><option value="chevron">헤링본·양방향 홈</option><option value="straight">직선 홈</option></select></label>
+     <label class="groove-only"><span>홈 깊이</span><div class="unit-input"><input name="grooveDepth" type="number" min="0.1" max="50" step="0.1" value="4"><b>mm</b></div></label>
+     <label class="groove-only"><span>리드·피치 기준</span><div class="unit-input"><input name="grooveLead" type="number" min="10" max="10000" step="1" value="680"><b>mm</b></div></label>
+     <label class="groove-only"><span>시작 수</span><div class="unit-input"><input name="grooveStarts" type="number" min="1" max="32" step="1" value="8"><b>회</b></div></label>
+     <label><span>모재</span><input name="material" value="S45C / KS D 3752"></label>
+     <label><span>표면 처리·피복</span><select name="surface"><option value="machined">기계가공</option><option value="chrome">경질 크롬 도금</option><option value="rubber">고무 피복</option><option value="urethane">우레탄 피복</option><option value="ivory">아이보리 피복</option><option value="heating">히팅·냉각 구조 협의</option></select></label>
+     <label><span>경도·처리 조건</span><input name="hardness" value="HB 180–220 / 협의"></label>
+    </div>
+   </section>
+   <section class="form-card">
+    <div class="form-card-heading"><span class="step-badge">05</span><div><h2>공차·검사·제작 조건</h2><p>값을 비워 두지 않고 “협의”라고 적어 두면 제작 검토 목록에 남습니다.</p></div></div>
+    <div class="field-grid three">
+     <label><span>면장 공차</span><input name="faceTol" value="±0.10 mm"></label>
+     <label><span>외경 공차</span><input name="odTol" value="±0.05 mm"></label>
+     <label><span>축·시트 공차</span><input name="shaftTol" value="h6 / 협의"></label>
+     <label><span>방사 런아웃</span><input name="runout" value="0.08 mm TIR"></label>
+     <label><span>동심도·직진도</span><input name="concentricity" value="0.05 mm"></label>
+     <label><span>표면 거칠기</span><input name="roughness" value="Ra 0.8 μm"></label>
+     <label><span>밸런스 등급</span><input name="balance" value="G6.3 / 협의"></label>
+     <label><span>기준 데이텀</span><input name="datum" value="A = 몸통 회전축"></label>
+     <label><span>사용 속도</span><input name="speed" value="협의 rpm"></label>
+    </div>
+    <label class="notes-field"><span>가공·검사 메모</span><textarea name="notes" rows="4">도면 확정 전 설치 장치, 베어링, 하중, 속도와 온도 조건을 확인한다.
+최종 제작은 승인 도면과 검사 기준에 따라 진행한다.</textarea></label>
+   </section>
+   <div class="form-actions">
+    <button type="button" id="validate-drawing">입력값 검토</button>
+    <button type="button" id="generate-drawing" class="primary-button">실제 도안 생성</button>
+    <button type="button" id="send-3d" class="secondary-button">3D 설계로 보내기 ↗</button>
+   </div>
+  </form>
+  <aside class="builder-side">
+   <section class="preview-card">
+    <div class="preview-heading"><div><p class="eyebrow">LIVE PREVIEW</p><h2>제작 검토용 2D 도면</h2></div><span id="preview-state" class="state-badge">초안</span></div>
+    <div id="drawing-preview" class="drawing-preview" role="img" aria-label="입력 치수 기반 롤 도면 미리보기"></div>
+    <div class="preview-actions"><button type="button" id="export-svg">SVG 저장</button><button type="button" id="export-dxf">DXF 저장</button><button type="button" id="print-drawing">인쇄·PDF</button></div>
+    <p id="builder-status" class="builder-status" role="status">기본값으로 도면이 준비되었습니다.</p>
+   </section>
+   <section class="tool-card">
+    <h2>도안 파일</h2>
+    <div class="tool-actions"><button type="button" id="save-json">도안 JSON 저장</button><label class="file-button">도안 JSON 열기<input id="open-json" type="file" accept=".json,application/json" hidden></label><button type="button" id="save-local">이 기기에서 임시 저장</button></div>
+    <p>JSON은 입력값과 제작 조건을 다시 열 수 있는 설계 파일입니다. 실제 CAD 형상 파일은 <a href="./design.html#import-cad-panel">CAD 업로드 화면</a>에서 연결하세요.</p>
+   </section>
+   <section class="tool-card checklist-card">
+    <div class="checklist-heading"><h2>제작 전 검토 목록</h2><span id="checklist-count">0/0</span></div>
+    <ul id="checklist"></ul>
+   </section>
+   <section class="tool-card howto-card">
+    <h2>사용 순서</h2>
+    <ol><li>몸통 면장·외경과 좌우 축 길이를 입력합니다.</li><li>베어링 시트 길이·지름과 표면 패턴을 정합니다.</li><li>공차·런아웃·표면·밸런스 조건을 채웁니다.</li><li><strong>실제 도안 생성</strong> 후 SVG·DXF 또는 JSON으로 저장합니다.</li><li>3D 설계로 보내거나 CAD를 업로드해 입체 형상을 확인합니다.</li></ol>
+    <p class="source-note">치수 항목은 롤의 기능·직진도·런아웃·베어링 시트·표면·밸런스·검사 조건을 도면에서 함께 관리하도록 구성했습니다. 값은 장치 사양에 맞춰 확정하세요.</p>
+   </section>
+  </aside>
+ </section>
+</main>
+<footer class="sub-footer"><a href="./index.html">승지정밀산업롤</a><span><a href="tel:01087048818">대표 이병덕 · 010-8704-8818</a> · <a href="tel:0313552631">031-355-2631</a></span><a href="./quote.html">견적문의 ↗</a></footer>
+<script type="module" src="./drawing-builder.js"></script>
+</body>
+</html>
