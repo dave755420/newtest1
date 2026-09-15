@@ -1,0 +1,5 @@
+.sites-runtime/
+node_modules/
+.vercel/
+dist/
+public/vendor/cad/occt-import-js.wasm

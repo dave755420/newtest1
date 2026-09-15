@@ -1,0 +1,14 @@
+{
+  "name": "seungji-test2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "drawings": "node scripts/generate-drawings.mjs",
+    "check": "node scripts/validate.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "dxf-parser": "1.1.2",
+    "occt-import-js": "0.0.23"
+  }
+}
