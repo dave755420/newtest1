@@ -1,0 +1,11 @@
+{
+  "name": "SJ-I160 중공형 웹 가이드 롤",
+  "units": "mm",
+  "overall": 830,
+  "face": 700,
+  "outerDiameter": 160,
+  "innerDiameter": 144,
+  "bearingEnvelope": "35 x 72 x 17",
+  "parts": 44,
+  "purpose": "CAD 업로드·구조 검토용 예제"
+}
