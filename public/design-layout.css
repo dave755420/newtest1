@@ -1,0 +1,30 @@
+/* Design workspace order: the CAD entry point spans the upper workspace, while
+   the frequently used dimension form stays beside the 3D preview. */
+.workspace-layout.design{grid-template-columns:minmax(260px,290px) minmax(0,1fr);grid-template-areas:"cad cad" "dimensions preview";gap:24px;align-items:start}
+.workspace-layout.design>.design-panel{display:contents}
+.workspace-layout.design>.design-panel>.cad-import-panel{grid-area:cad;margin:0;min-width:0}
+.workspace-layout.design>.design-panel>.design-dimensions-panel{grid-area:dimensions;min-width:0;background:white;border:1px solid var(--line);padding:22px;position:sticky;top:15px}
+.workspace-layout.design>.workspace-view{grid-area:preview;min-width:0}
+.design-dimensions-panel>.eyebrow{display:none}
+.cad-import-panel{display:grid;grid-template-columns:minmax(240px,.9fr) minmax(300px,1.8fr);grid-template-areas:"heading heading" "upload formats" "details samples" "progress progress" "status status" "options options" "result result";column-gap:18px;row-gap:10px}
+.cad-import-panel>h2{grid-area:heading}
+.cad-import-panel>.cad-file-button{grid-area:upload}
+.cad-import-panel>.cad-formats{grid-area:formats;align-self:center;margin:0!important}
+.cad-import-panel>details{grid-area:details;align-self:start}
+.cad-import-panel>.cad-sample-links{grid-area:samples;align-self:stretch;margin:0;border-top:0;border-left:1px solid #ccd7e1;padding:0 0 0 18px}
+.cad-import-panel>.cad-progress{grid-area:progress}
+.cad-import-panel>#cad-status{grid-area:status}
+.cad-import-panel>#cad-options{grid-area:options}
+.cad-import-panel>#cad-result{grid-area:result}
+.cad-sample-links a{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cad-sample-links a[download]::after{content:'3D로 불러오기';font-size:11px;color:#80532d;white-space:nowrap}
+@media(max-width:900px){
+ .workspace-layout.design{grid-template-columns:minmax(0,1fr);grid-template-areas:"cad" "dimensions" "preview"}
+ .workspace-layout.design>.design-panel>.design-dimensions-panel{position:static}
+ .cad-import-panel{grid-template-columns:minmax(0,1fr);grid-template-areas:"heading" "upload" "formats" "details" "samples" "progress" "status" "options" "result"}
+ .cad-import-panel>.cad-sample-links{border-left:0;border-top:1px solid #ccd7e1;padding:12px 0 0}
+}
+@media(max-width:480px){
+ .workspace-layout.design{gap:16px}
+ .workspace-layout.design>.design-panel>.design-dimensions-panel{padding:16px}
+}
