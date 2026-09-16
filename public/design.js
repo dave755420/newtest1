@@ -20,8 +20,35 @@ if(builderAction&&!builderAction.querySelector('[data-drawing-builder]')){
  builderAction.insertBefore(link,builderAction.firstChild);
 }
 const form=document.getElementById('dimension-form'),status=document.getElementById('design-feedback');
+const manualApplyButton=form.querySelector('button[type="submit"]');
+if(manualApplyButton)manualApplyButton.textContent='수동으로 다시 적용';
 function fill(p){for(const key of ['face','diameter','shaft','left','right','grooveDepth','lead','starts'])if(p[key]!=null)form.elements[key].value=p[key];form.elements.kind.value=p.id==='grooved'?'grooved':'long';}
-async function apply(raw){try{const p=normalizeDesign(raw);await window.sj.applyDesign(p);fill(p);status.textContent='치수를 적용했습니다. 3D·구조와 도면 탭에서 확인하세요.';return p;}catch(e){status.textContent=e.message;throw e;}}
+async function apply(raw,mode='manual'){
+ try{
+  const p=normalizeDesign(raw);
+  await window.sj.applyDesign(p);
+  if(mode!=='live')fill(p);
+  status.textContent=mode==='live'?'자동 적용됨 · 3D·구조와 도면이 갱신되었습니다.':'치수를 적용했습니다. 3D·구조와 도면 탭에서 확인하세요.';
+  return p;
+ }catch(e){status.textContent=e.message;throw e;}
+}
+let liveTimer=null,liveApplying=false,liveQueued=false;
+function readForm(){return {...Object.fromEntries(new FormData(form)),surface:window.sj.getDesign().surface};}
+function scheduleLiveApply(){
+ if(!window.sj)return;
+ clearTimeout(liveTimer);
+ liveTimer=setTimeout(async()=>{
+  if(liveApplying){liveQueued=true;return;}
+  liveApplying=true;
+  try{await apply(readForm(),'live');}catch{}
+  finally{
+   liveApplying=false;
+   if(liveQueued){liveQueued=false;scheduleLiveApply();}
+  }
+ },180);
+}
+form.addEventListener('input',scheduleLiveApply);
+form.addEventListener('change',scheduleLiveApply);
 form.addEventListener('submit',async e=>{e.preventDefault();try{await apply({...Object.fromEntries(new FormData(form)),surface:window.sj.getDesign().surface});}catch{}});
 function current(){if(window.sj.getCad())throw new Error('업로드한 CAD는 원본 저장 또는 STL 저장을 이용하세요.');return normalizeDesign(window.sj.getDesign());}
 document.getElementById('export-json').onclick=()=>{try{download(JSON.stringify(current(),null,2),'SJ-roll-design.json','application/json');status.textContent='현재 적용된 설계 파일을 저장했습니다.';}catch(e){status.textContent=e.message;}};
